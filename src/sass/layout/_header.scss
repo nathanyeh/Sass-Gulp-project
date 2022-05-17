@@ -1,0 +1,23 @@
+header {
+    // code
+    background-color: #333;
+
+    .login {
+        font-size: 20px;
+        color: orangered;
+    }
+
+    nav {
+        width: 100%;
+
+        ul {
+            list-style: none;
+            display: flex;
+
+            li {
+                width: 100px;
+
+            }
+        }
+    }
+}

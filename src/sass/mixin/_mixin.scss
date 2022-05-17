@@ -1,0 +1,109 @@
+// ================== 函式 ============================ 
+
+//$minHeight 區域變數 只在作用域內可以取得　
+@mixin center($minHeight:null) {
+    margin-left: auto;
+    margin-right: auto;
+    min-height: $minHeight;
+}
+
+// for 迴圈
+
+@mixin pull($var, $dir) {
+    @for $i from 1 through $var {
+        .push#{$dir}_#{$i} {
+            position: relative;
+            #{$dir}: $i * 1px;
+        }
+    }
+}
+
+
+// #{}  變數轉型　（屬性值以外都要轉型）
+@mixin font($font, $var, $path) {
+    .font#{$font} {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: $font + px;
+        #{$var}: 10px, ;
+        background-image: url('./#{$path}/aa.png')
+    }
+}
+
+
+// 按鈕組件（函式）
+@mixin btn($style, $btn_bg, $width:null) {
+    .btn_#{$style} {
+        color: #fff;
+        text-align: center;
+        background-color: $btn_bg;
+        max-width: $width;
+        padding: 10px 30px;
+        cursor: pointer;
+        transition: .4s all ease;
+        @content;
+
+        //hover過去的效果
+        &:hover {
+            background-color: darken($btn_bg, 20);
+        }
+    }
+
+}
+
+
+// ＬＡＹＯＵＴ範例
+@mixin layout($width, $bgc : null) {
+
+    // if layout
+    @if ($width==100) {
+        width: 100%;
+    }
+
+    @else {
+        max-width: $width + px;
+        width: 100%;
+        //引用其他的函式
+        @include center()
+    }
+
+    // background-color
+    background-color:$bgc
+}
+
+
+// title
+
+@mixin title($title) {
+
+    @each $key,
+    $val in $title {
+        #{$key} {
+            font-size: $val;
+        }
+    }
+}
+
+
+//rwd 斷點
+@mixin m() {
+    @media all and (max-width : $m_breakpoint) {
+        @content
+    }
+}
+
+;
+
+@mixin t() {
+    @media all and (max-width : $t_breakpoint) {
+        @content
+    }
+}
+
+;
+
+//
+@mixin rwd($b) {
+    @media all and (max-width : $b) {
+        @content
+    }
+}

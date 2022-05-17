@@ -1,0 +1,450 @@
+//引用 var.scss
+//_告訴scss不要編譯
+@import 'base/var';
+@import 'base/reset';
+@import 'mixin/mixin';
+//@import '../node_modules/bootstrap/scss/bootstrap.scss';
+@import 'layout/header';
+@import 'layout/footer';
+@import 'page/index';
+@import 'page/about';
+
+
+body {
+    $bgc: #eee;
+    $a: 10px; //  區域變數
+    background-color: $bgc; //取到區域變數值
+    color: $color;
+    padding: null; // 屬性刪除
+    margin: $margin;
+    border-color: map-get($map, 'red');
+}
+
+
+//取不到區域變數的值
+a {
+    //font-size: $a;
+    font-size: $fontSize;
+}
+
+.wrapper {
+    width: 1200px;
+    margin: 0 auto;
+
+    h1 {
+        font-size: 30px;
+
+        .title {
+            font-size: 12px;
+            display: inline-block;
+        }
+    }
+
+    span {
+        font-size: 20px;
+    }
+}
+
+
+//偽元素
+// a {
+//     color: #333;
+
+//     &:hover {
+//         color: #eee;
+//     }
+
+//     &::before {
+//         content: '';
+//     }
+// }
+
+
+//運算 //單位相同才能做運算, 允許有負值
+.box {
+    width: 1000px + 100px; //不可兩個單位不同
+    height: 10 - 100px; //但可以一個沒單位一個有單位
+    margin: 10 * 10px; //相乘單位放最後面
+    font-size: (100/10)+px; //要括弧才能判斷是除法, 單位放括弧後
+}
+
+
+//運算的函式
+.test1 {
+    width: floor(1000/6) + px; //無條件捨去
+    height: ceil(150.26) +px; //無條件進位
+    font-size: round(15.76) +px; //四捨五入
+}
+
+
+//顏色函式
+.color {
+    color: lighten($color: #000000, $amount: 50); //變淺
+    background-color: darken(#fff, $amount: 90); //變深
+}
+
+//範例應用
+$a_color: #f20;
+
+a {
+    color: $a_color;
+    font-size: 30px;
+    transition: .2s all ease;
+
+    &:hover {
+        color: lighten($a_color, 30);
+        font-size: 35px;
+    }
+}
+
+// 按鈕範例
+$btn_bg: #333;
+
+.btn {
+    color: #fff;
+    text-align: center;
+    background-color: $btn_bg;
+    max-width: 80px;
+    padding: 10px 30px;
+    cursor: pointer;
+    transition: .1s all ease;
+
+    //hover過去的效果
+    &:hover {
+        background-color: darken($btn_bg, 20);
+    }
+}
+
+
+//運算函式範例 h1~h5
+
+$body_font: 12px;
+
+h1 {
+    font-size: round($body_font*4.5)
+}
+
+h2 {
+    font-size: round($body_font*3.8)
+}
+
+h3 {
+    font-size: round($body_font*3.1)
+}
+
+h4 {
+    font-size: round($body_font*2.4)
+}
+
+h5 {
+    font-size: round($body_font*1.3)
+}
+
+
+//判斷式 if else
+$con : true;
+
+.if {
+    @if($con) {
+        //條件成立
+        width: 100px;
+    }
+
+    @else {
+        //條件不成立
+        width: initial;
+    }
+}
+
+.center {
+    //引用  
+    @include center(200px)
+}
+
+.layout {
+    // 引用
+    width: 1200px;
+    @include center(100px);
+}
+
+.w100 {
+    @include layout(100, #f29);
+    min-height: 300px;
+}
+
+.w1200 {
+    @include layout(1200, #f30);
+    min-height: 300px;
+    margin-top: 45px;
+
+}
+
+$width: 1200;
+
+.section {
+    @if ($width==100) {
+        width: 100%;
+    }
+
+    @else {
+        width: $width +px;
+        margin: 0 auto;
+    }
+}
+
+@include btn(xxl, #f20, 250px) {
+    border-radius: 10px
+}
+
+;
+
+@include btn(xl, #333, 200px);
+
+@include font(30, padding, dist/images);
+
+.slider1 {
+    background-image: url('./#{$path}/a1.jpg');
+}
+
+.slider2 {
+    background-image: url('./#{$path}/a2.jpg');
+}
+
+
+@include pull(10, right);
+
+
+//函式
+@mixin center($minHeight:null) {
+    //$minHeight為區域變數 只能在作用區域內取得
+    margin-left: auto;
+    margin-right: auto;
+    min-height: $minHeight;
+}
+
+.center {
+    @include center(200px);
+}
+
+.layout {
+    width: 1200px;
+    @include center(100px);
+}
+
+
+//layout範例應用
+@mixin layout($width, $bgc : null) {
+
+    //if layout
+    @if ($width==100) {
+        width: 100%;
+
+    }
+
+    @else {
+        width: $width + px;
+        //引用其他函式
+        @include center();
+    }
+
+    //background-color
+    background-color: $bgc;
+}
+
+.w100 {
+    @include layout(100, #f29);
+    min-height: 300px;
+    background-color: yellow;
+}
+
+.w1200 {
+    @include layout(1200, #f30);
+    min-height: 300px;
+    background-color: forestgreen;
+}
+
+@mixin btn($btn_bg, $width:null) {
+    color: #fff;
+    text-align: center;
+    background-color: $btn_bg;
+    max-width: $width;
+    padding: 10px 30px;
+    cursor: pointer;
+    transition: .4s all ease;
+
+    //hover過去的效果
+    &:hover {
+        background-color: darken($btn_bg, 20);
+    }
+
+}
+
+.btn_large {
+    @include btn(#333, 200px);
+}
+
+.btn_default {
+    @include btn(#f2914f, 120px);
+}
+
+.btn_small {
+    @include btn(#f29, 60px);
+}
+
+
+//#{}變數轉型 (屬性值以外都要轉型)
+//變數只能放在"屬性值"裡面，但要在其他地方放置變數，就得利用"轉型"
+//讓變數可以放在"屬性值"以外的地方。例如:class
+
+@mixin font($font, $var, $url) {
+    .font#{$font} {
+        //不是屬性的值要做轉型
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: $font +px;
+        #{$var}: 10px;
+        background-image: url('./images/#{$url}.png');
+    }
+}
+
+@include font(30, padding, aa);
+
+
+//for迴圈
+
+@mixin pull($var, $dir) {
+    @for $i from 1 through $var {
+        .push#{$dir}_#{$i} {
+            position: relative;
+            #{$dir}: $i* 1px;
+        }
+    }
+}
+
+@include pull(10, right);
+
+
+//grid
+@mixin grid($col) {
+    @for $i from 1 through $col {
+        .col-#{$i} {
+            flex: 0 0 auto;
+            width: ($i/$col)*100%;
+        }
+    }
+}
+
+@include grid(12);
+
+
+//each
+@mixin img($list, $w:100%) {
+    @each $a in $list {
+        .img_#{$a} {
+            width: $w;
+            background-image: url('./images/#{$a}.jpg');
+            background-repeat: none;
+            background-size: cover;
+            object-fit: cover;
+            @content;
+        }
+    }
+}
+
+@include img(a1 banner, 80%);
+@include img(b1, 100%);
+
+@include img(c1, 300px) {
+    height: 500px;
+}
+
+;
+
+
+//map
+$title:("h1":50px,
+    "h2":40px,
+    "h3":30px,
+    "h4":20px,
+    "h5":10px,
+);
+
+//title
+@each $key,
+$val in $title {
+    #{$key} {
+        font-size: $val;
+    }
+}
+
+@include title($title);
+
+.r {
+    color: #000000;
+    font-size: 100px;
+}
+
+@include t() {
+
+    //平板
+    .r {
+        color: yellow;
+    }
+}
+
+
+@include m() {
+
+    //手機板
+    .r {
+        color: #f20;
+    }
+}
+
+@include rwd(414px) {
+    .r {
+        color: #333;
+        font-size: 150px;
+    }
+}
+
+$basic : ("white" : #fff,
+    "dark" : #333,
+    "primary" : #1A242A,
+    "secondary" : #445F6F,
+    "tretiary" : #7697AB,
+    "disabled" : #ABAEB0,
+
+);
+
+//each 迴圈
+@each $key,
+$val in $basic {
+    .#{$key} {
+        background-color: $val
+    }
+}
+
+
+$space : ("large" : 56px,
+    "medium" : 32px,
+    "small" : 16px);
+
+
+@each $key,
+$val in $space {
+    .#{$key} {
+        margin-top: $val
+    }
+}
+
+
+$font_size : ("t1" : 16px,
+    "t2" : 24px);
+
+//each 迴圈
+@each $key,
+$val in $font_size {
+    .#{$key} {
+        font-size: $val
+    }
+}

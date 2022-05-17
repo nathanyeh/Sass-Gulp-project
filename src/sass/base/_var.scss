@@ -1,0 +1,33 @@
+//變數
+$color : #333;
+$bgc : #eee;
+$margin : 10px auto;
+$fontSize : 20px;
+$layout : 1920px;
+/*==css== */
+// map 數值型態
+
+$map : (
+    'red' : #f20,
+    'black' : #333);
+
+// images url
+$path  :  dist/images;
+
+
+//map
+$title : (
+  "h1" : 50px,
+  "h2" : 40px, 
+  "h3" : 30px,
+  "h4" : 20px,
+  "h5" : 16px,
+  ".small" : 10px,
+  ".large" : 3rem
+);
+
+
+//斷點
+
+$m_breakpoint : 720px;
+$t_breakpoint : 1024px;
