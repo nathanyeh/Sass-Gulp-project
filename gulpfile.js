@@ -7,7 +7,7 @@ function defaultTask(cb) {
   cb();
 }
 
-exports.default = defaultTask
+// exports.default = defaultTask
 
 
 //A 任務
@@ -61,6 +61,11 @@ function moveCss() {
   return src('css/*.css').pipe(dest('dist/css'))
 }
 
+// img move
+function moveImg() {
+  return src('src/images/*.*').pipe(dest('dist/css'))
+}
+
 
 const sass = require('gulp-sass')(require('sass'));
 const sourcemaps = require('gulp-sourcemaps');
@@ -78,8 +83,33 @@ function watchfile() {
   watch(['src/*.html' , 'src/**/*.html'], includeHTML)    // 監看html
   //  watch('js/*.js' , moveJs)  // 監看js
   //  watch('css/*.css' , moveCss)  // 監看js
-  watch(['./src/sass/*.scss' ,'./src/sass/**/*.scss'], styleSass)
+  watch(['./src/sass/*.scss' ,'./src/sass/**/*.scss'], styleSass) //監看sass
 }
- 
-exports.w = series(parallel(includeHTML,styleSass), watchfile)
 
+
+//瀏覽器同步
+const browserSync = require('browser-sync');
+const reload = browserSync.reload;
+
+
+function browser(done) {
+    browserSync.init({
+        server: {
+            baseDir: "./dist",
+            index: "index.html"
+        },
+        port: 3000
+    });
+    watch(['src/*.html' , 'src/**/*.html'], includeHTML).on('change' , reload)    // 監看html
+    watch('src/js/*.js' , moveJs)  // 監看js
+    watch(['src/images/*.*', 'src/images/**/*.*'], moveImg)  // 監看 img
+    watch(['./src/sass/*.scss' ,'./src/sass/**/*.scss'], styleSass).on('change' , reload) // 監看sass
+    done();
+}
+
+
+// 監看
+exports.w =  series(parallel(moveJs,moveImg,includeHTML,styleSass), watchfile)  
+
+//瀏覽器同步
+exports.default =  series(parallel(moveJs,includeHTML,styleSass,moveImg), browser) 
